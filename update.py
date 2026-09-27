@@ -41,8 +41,8 @@ MAX_MAJORS = 15
 MAX_SEEDS = 12
 KEEP_MAJORS = 6         # a run yielding fewer than this is treated as failed
 KEEP_SEEDS = 4
-MAX_ARTICLES = 22       # articles whose body we fetch and send to the model
-BODY_CHARS = 3500
+MAX_ARTICLES = 14       # articles whose body we fetch and send to the model
+BODY_CHARS = 2500
 # Several funding-news sites 403 anything that self-identifies as a bot.
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
       "Chrome/140.0.0.0 Safari/537.36")
@@ -51,7 +51,7 @@ UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
 # The flagship flash model gets demand-throttled (503); the lite models are quieter
 # and carry a larger free daily request allowance, so they stand in when it is busy.
 MODELS = [m.strip() for m in os.environ.get(
-    "GEMINI_MODELS", "gemini-3.8-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite"
+    "GEMINI_MODELS", "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.8-flash"
 ).split(",") if m.strip()]
 
 FUNDING = re.compile(
@@ -277,9 +277,17 @@ def main():
 
     found = []
     if items:
-        found = validate(parse_json(ask(build_prompt(items, today))), today,
-                         allowed_src={i["link"] for i in items})
-    print(f"{len(found)} valid rounds extracted")
+        raw = ask(build_prompt(items, today))
+        parsed = parse_json(raw)
+        found = validate(parsed, today, allowed_src={i["link"] for i in items})
+        print(f"model returned {len(raw)} chars, {len(parsed)} objects, "
+              f"{len(found)} survived validation")
+        if not found:
+            print("  raw head: " + raw[:400].replace("\n", " "))
+            for e in parsed[:4]:
+                missing = [k for k in REQUIRED if not str(e.get(k, "")).strip()]
+                print(f"  dropped {e.get('name')!r}: iso={e.get('iso')} "
+                      f"amt={e.get('amt')!r} src={str(e.get('src'))[:60]!r} missing={missing}")
 
     majors = merge(majors, [e for e in found if e["amt"] >= MIN_MAJOR_M])
     seeds = merge(seeds, [e for e in found if e["amt"] < MIN_MAJOR_M])
