@@ -24,10 +24,9 @@ MAX_SEEDS = 12
 KEEP_MAJORS = 6         # a run yielding fewer than this is treated as failed
 KEEP_SEEDS = 4
 
-# Free-tier Google Search grounding is 2.5-only (500 RPD, shared with Flash-Lite);
-# the 3.x Flash models list grounding as unavailable on the free tier. Bump via env
-# once that changes, or to move onto a paid tier.
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+# 2.5-flash carried free Google Search grounding but is now closed to new API keys.
+# Whether grounding works on the free tier for 3.x is what this run is testing.
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 
 REQUIRED = ("name", "sector", "amt", "stage", "date", "iso",
             "does", "hq", "what", "founders", "investors", "why", "src")
