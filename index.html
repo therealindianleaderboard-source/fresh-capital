@@ -144,9 +144,9 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
 <p class="hint"><span id="count"></span><span>Bar length &#8776; round size</span></p>
 
 <section class="sec">
-  <p class="kicker">Section II &middot; newest first</p>
+  <p class="kicker">Section II &middot; ranked by cheque size</p>
   <h2>Just Funded</h2>
-  <p>The other end of the market: pre-seed and seed cheques written in the last few weeks, most of them a company&rsquo;s first institutional round. Ordered by announcement date, because at this size recency is the only ranking that means anything.</p>
+  <p>The other end of the market: pre-seed and seed cheques written in the last few weeks, most of them a company&rsquo;s first institutional round. Ranked by cheque size, same as the board above; only rounds from the last 90 days make the list.</p>
 </section>
 <ol class="board" id="seeds"></ol>
 <p class="hint"><span id="scount"></span><span>Bar length &#8776; round size, this section only</span></p>
@@ -617,7 +617,7 @@ const money = m => m >= 1000 ? '$' + +(m/1000).toFixed(2) + 'B' : '$' + +m.toFix
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 DATA.sort((a,b) => b.amt - a.amt);
-SEEDS.sort((a,b) => String(b.iso||'').localeCompare(String(a.iso||'')));
+SEEDS.sort((a,b) => b.amt - a.amt);
 const ALL = DATA.concat(SEEDS);
 const max = DATA.length ? DATA[0].amt : 1;
 const smax = SEEDS.length ? Math.max(...SEEDS.map(d => d.amt)) : 1;
@@ -659,7 +659,8 @@ render();
 document.getElementById('seeds').innerHTML =
   SEEDS.map((d,i) => rowHTML(d, i, smax, DATA.length + i)).join('');
 document.getElementById('scount').textContent = SEEDS.length
-  ? `${SEEDS.length} rounds · newest ${SEEDS[0].date}` : 'No seed rounds logged yet';
+  ? `${SEEDS.length} rounds · newest ${SEEDS.reduce((a,d) => d.iso > a.iso ? d : a).date}`
+  : 'No seed rounds logged yet';
 
 document.getElementById('filters').addEventListener('click', e => {
   const b = e.target.closest('button[data-s]'); if (!b) return;
