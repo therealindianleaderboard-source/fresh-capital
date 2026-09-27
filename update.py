@@ -42,7 +42,7 @@ MAX_SEEDS = 12
 KEEP_MAJORS = 6         # a run yielding fewer than this is treated as failed
 KEEP_SEEDS = 4
 MAX_ARTICLES = 14       # articles whose body we fetch and send to the model
-BODY_CHARS = 2500
+BODY_CHARS = 6000       # site nav eats the first ~1k chars, so leave room for the article
 # Several funding-news sites 403 anything that self-identifies as a bot.
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
       "Chrome/140.0.0.0 Safari/537.36")
@@ -59,8 +59,14 @@ FUNDING = re.compile(
     r"\b(seed|pre-seed|series\s+[a-f])\b|\bfunding\b|\b[$€£]\d",
     re.I)
 
-REQUIRED = ("name", "sector", "amt", "stage", "date", "iso",
-            "does", "hq", "what", "founders", "investors", "why", "src")
+# Facts that must be right or the entry is worthless. No amount, no date, no source,
+# no entry.
+HARD = ("name", "sector", "amt", "stage", "iso", "does", "what", "why", "src")
+# Details a short news item often omits. Saying so is honest and still useful, and
+# beats dropping a real round over a missing city.
+SOFT = {"founders": "Not disclosed", "hq": "Not disclosed",
+        "investors": "Not disclosed", "valuation": "Undisclosed"}
+REQUIRED = HARD + tuple(SOFT)
 
 
 def fetch(url, timeout=20):
@@ -141,10 +147,13 @@ Extract every item that announces a funding round raised by an AI, software or I
 company. Skip everything else: acquisitions, fund launches by VC firms, IPOs, layoffs,
 product launches, and rounds raised by companies that are not software or AI.
 
-Use ONLY the text below. Do not add companies you happen to know about, and do not fill
-a field by guessing - if an item does not state something, leave that company out rather
-than inventing it. `src` must be that item's URL exactly as given, and `iso` must be
-that item's DATE.
+Use ONLY the text below - do not add companies you happen to know about from elsewhere.
+`src` must be that item's URL exactly as given, and `iso` must be that item's DATE.
+
+Leave a company out only if the text does not make clear its name, its round size, or
+what it does. For any OTHER field the item simply does not mention - founders, city,
+investors, valuation - write "Not disclosed". Never invent a founder, an investor or a
+number, and never drop a real round just because a detail is missing.
 
 Return ONLY a JSON array. Each element has exactly these keys:
   name       company name
@@ -153,7 +162,6 @@ Return ONLY a JSON array. Each element has exactly these keys:
   amt        round size as a NUMBER in millions of USD (7400 = 7.4 billion, 2.5 = 2.5
              million). Convert other currencies to USD at a rough current rate.
   stage      "Series A".."Series F", "Seed", "Pre-seed", or "Private round"
-  date       human date matching iso, e.g. "Sep 18, 2026"
   iso        the item's DATE, as YYYY-MM-DD
   valuation  post-money if the item states one, else "Undisclosed"
   does       3-8 words for a dense list row, lowercase-ish, e.g. "checkout plumbing for AI sellers"
@@ -220,7 +228,7 @@ def validate(entries, today, allowed_src=None):
     for e in entries:
         if not isinstance(e, dict):
             continue
-        if any(not str(e.get(k, "")).strip() for k in REQUIRED):
+        if any(not str(e.get(k, "")).strip() for k in HARD):
             continue
         if not str(e["src"]).startswith("http"):
             continue
@@ -236,7 +244,11 @@ def validate(entries, today, allowed_src=None):
         if amt <= 0:
             continue
         e["amt"] = amt
-        clean.append({k: e[k] for k in REQUIRED + ("valuation", "yc") if k in e})
+        e["date"] = f"{iso:%b} {iso.day}, {iso.year}"   # derived, so it always matches iso
+        for k, default in SOFT.items():
+            if not str(e.get(k, "")).strip():
+                e[k] = default
+        clean.append({k: e[k] for k in REQUIRED + ("date", "yc") if k in e})
     return clean
 
 
@@ -312,7 +324,7 @@ def main():
 
 def selftest():
     today = dt.date(2026, 9, 27)
-    good = {k: "x" for k in REQUIRED}
+    good = {k: "x" for k in HARD}
     good |= {"name": "Real Co", "amt": 400, "iso": "2026-09-01", "src": "https://e.com/a"}
 
     assert parse_json('```json\n[{"a":1}]\n```') == [{"a": 1}]
@@ -320,12 +332,17 @@ def selftest():
     assert parse_json("not json at all") == []
     assert parse_json('[{"a": broken}]') == []          # malformed, not a crash
 
-    assert len(validate([good], today)) == 1
+    v = validate([good], today)
+    assert len(v) == 1
+    assert v[0]["date"] == "Sep 1, 2026"                  # derived from iso, not trusted
+    assert v[0]["founders"] == "Not disclosed"            # soft field filled, not dropped
+    assert v[0]["valuation"] == "Undisclosed"
+    assert validate([good | {"what": " "}], today) == []   # a hard field still drops it
     assert validate([good | {"iso": "2026-01-01"}], today) == []        # stale
     assert validate([good | {"iso": "2026-12-01"}], today) == []        # future
     assert validate([good | {"src": "ask-me"}], today) == []            # not a URL
-    assert validate([good | {"why": "  "}], today) == []                # blank field
-    assert validate([{k: v for k, v in good.items() if k != "founders"}], today) == []
+    assert validate([good | {"why": "  "}], today) == []                # blank hard field
+    assert len(validate([{k: v for k, v in good.items() if k != "founders"}], today)) == 1
     assert validate([good | {"amt": "lots"}], today) == []              # non-numeric
     assert validate([good | {"amt": 0}], today) == []
     assert validate([good], today, allowed_src={"https://other"}) == []   # unseen source
