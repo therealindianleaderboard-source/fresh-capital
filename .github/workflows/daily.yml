@@ -1,0 +1,42 @@
+name: Daily board update
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 11:00 UTC every day
+  workflow_dispatch:        # and a manual "Run workflow" button
+
+permissions:
+  contents: write
+
+concurrency:
+  group: board-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Check the splice and validation logic
+        run: python update.py --selftest
+
+      - name: Refresh the board
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python update.py
+
+      - name: Commit if the board changed
+        run: |
+          git config user.name "fresh-capital-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet && echo "nothing new today" && exit 0
+          git commit -m "Board update $(date -u +%F)"
+          git push

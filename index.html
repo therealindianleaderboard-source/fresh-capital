@@ -1,0 +1,636 @@
+<title>Fresh Capital</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ink:#11141b; --ink-2:#1b1f29; --line:#d6d8de; --line-2:#e6e7eb;
+  --ground:#eceef1; --surface:#f7f8fa; --surface-2:#e3e5ea;
+  --text:#14171f; --text-2:#585f6e; --text-3:#858d9c;
+  --brass:#a9741f; --brass-bar:#c8933a; --brass-soft:rgba(200,147,58,.16);
+  --teal:#1f6b68; --yc:#b8481a;
+  --shadow:0 1px 2px rgba(17,20,27,.06), 0 12px 32px -12px rgba(17,20,27,.18);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --line:#2a2f3b; --line-2:#22262f;
+    --ground:#0d1015; --surface:#15181f; --surface-2:#1d212a;
+    --text:#e8eaee; --text-2:#9aa2b1; --text-3:#6e7686;
+    --brass:#e0ae5c; --brass-bar:#c8933a; --brass-soft:rgba(200,147,58,.14);
+    --teal:#5fb3ae; --yc:#ff8f55;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --line:#2a2f3b; --line-2:#22262f;
+  --ground:#0d1015; --surface:#15181f; --surface-2:#1d212a;
+  --text:#e8eaee; --text-2:#9aa2b1; --text-3:#6e7686;
+  --brass:#e0ae5c; --brass-bar:#c8933a; --brass-soft:rgba(200,147,58,.14);
+  --teal:#5fb3ae; --yc:#ff8f55;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 16px 40px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:40px 22px 72px}
+
+/* ---- masthead ---- */
+header.mast{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:6px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin:0 0 10px}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(34px,6vw,58px);line-height:.98;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1 em{font-family:var(--body);font-style:italic;font-weight:300;letter-spacing:-.01em}
+.dek{margin:14px 0 0;max-width:62ch;color:var(--text-2);font-size:17px}
+.tape{display:flex;flex-wrap:wrap;gap:0;margin-top:22px;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--surface)}
+.tape div{flex:1 1 140px;padding:11px 14px;border-right:1px solid var(--line)}
+.tape div:last-child{border-right:0}
+.tape dt{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-3);margin:0}
+.tape dd{margin:3px 0 0;font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ---- filters ---- */
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin:26px 0 4px}
+.filters button{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line);background:transparent;color:var(--text-2);border-radius:999px;cursor:pointer;transition:.15s}
+.filters button:hover{border-color:var(--brass);color:var(--text)}
+.filters button[aria-pressed="true"]{background:var(--brass-bar);border-color:var(--brass-bar);color:#14100a;font-weight:600}
+
+/* ---- board ---- */
+.board{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+.board li{border-bottom:1px solid var(--line-2)}
+.row{position:relative;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
+  padding:15px 12px;background:transparent;border:0;text-align:left;color:inherit;font:inherit;cursor:pointer;overflow:hidden}
+.row:hover{background:var(--surface)}
+.row:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+.bar{position:absolute;inset:0 auto 0 0;background:var(--brass-soft);z-index:0;pointer-events:none}
+.row>*{position:relative;z-index:1}
+.rank{font-family:var(--mono);font-size:31px;font-weight:600;line-height:1;color:var(--brass);font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;padding:7px 11px;border:1px solid var(--brass);border-radius:3px;background:var(--brass-soft);justify-self:end}
+.rank.top{background:var(--brass-bar);border-color:var(--brass-bar);color:#14100a}
+.who{min-width:0;display:flex;flex-direction:column;gap:4px}
+.name{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.015em;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.sector{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);border:1px solid currentColor;border-radius:2px;padding:1px 5px;font-weight:500}
+.does{font-size:14.5px;color:var(--text-2);overflow-wrap:anywhere}
+.amt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.amt b{font-family:var(--mono);font-size:23px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.025em;color:var(--brass)}
+.amt span{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.sector.yc{color:var(--yc)}
+.sec{margin:52px 0 0;padding-top:24px;border-top:1px solid var(--text-2)}
+.sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(23px,3.6vw,33px);letter-spacing:-.022em;margin:0;line-height:1.05}
+.sec p{margin:9px 0 0;color:var(--text-2);max-width:60ch;font-size:16.5px}
+.hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin:14px 0 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---- dialog ---- */
+dialog{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:4px;padding:0;
+  max-width:620px;width:calc(100% - 32px);box-shadow:var(--shadow);
+  max-height:88vh;max-height:88dvh;overflow:auto;overscroll-behavior:contain}
+dialog::backdrop{background:rgba(9,11,15,.55);backdrop-filter:blur(2px)}
+.d-head{padding:24px 26px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.d-head .sector{margin-bottom:10px;display:inline-block}
+.d-head h2{font-family:var(--disp);font-weight:800;font-size:29px;letter-spacing:-.025em;margin:0;line-height:1.05;overflow-wrap:anywhere}
+.d-money{display:flex;align-items:baseline;gap:10px;margin-top:10px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.d-money b{font-size:26px;font-weight:600;color:var(--brass);letter-spacing:-.02em}
+.d-money span{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.d-body{padding:22px 26px 26px}
+.d-body h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-3);margin:0 0 6px;font-weight:500}
+.d-body p{margin:0 0 20px;font-size:16.5px;line-height:1.6}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:3px;margin:0 0 22px}
+.facts div{background:var(--surface);padding:10px 12px}
+.facts dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin:0}
+.facts dd{margin:3px 0 0;font-size:14.5px;line-height:1.45}
+.why{border-left:2px solid var(--brass-bar);padding-left:15px}
+.d-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-top:6px}
+.d-foot a{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);text-decoration:none;border-bottom:1px solid currentColor}
+.d-foot button{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--line);background:transparent;color:var(--text-2);border-radius:2px;cursor:pointer}
+.d-foot button:hover{border-color:var(--brass);color:var(--text)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--text-3)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:620px){
+  .wrap{padding:26px 15px 56px}
+  h1{font-size:clamp(29px,8.6vw,42px)}
+  .dek{font-size:16px}
+  /* four stat cells wrapped mid-row and left dangling borders — grid them instead */
+  .tape{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:18px}
+  .tape div{border-right:0;padding:9px 12px;background:var(--surface)}
+  .tape dd{font-size:15px}
+  .filters{gap:6px;margin-top:20px}
+  .row{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:15px 10px}
+  .rank{order:-1;align-self:flex-start;font-size:15px;line-height:1.2;padding:2px 7px;border-radius:2px;letter-spacing:.02em}
+  .who{align-self:stretch;gap:3px}
+  .name{font-size:18px;gap:7px}
+  .amt{gap:9px}
+  .amt b{font-size:22px}
+  .does{font-size:13.5px}
+  .sec{margin-top:40px;padding-top:20px}
+  .hint{font-size:10px;letter-spacing:.06em}
+  .d-head{padding:18px 18px 15px}
+  .d-head h2{font-size:23px}
+  .d-money b{font-size:21px}
+  .d-body{padding:18px 18px 22px}
+  .d-body p{font-size:15.5px;margin-bottom:18px}
+  .facts{grid-template-columns:1fr}
+  footer{font-size:10.5px}
+}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <p class="kicker">Live ledger &middot; updated <span id="asof"></span></p>
+  <h1>Fresh Capital</h1>
+  <p class="dek">Every AI and software round of the last 90 days, ranked by cheque size. Nothing older — this is who raised recently, not who is biggest. Tap any line for the founders, the backers, and the reason the money moved.</p>
+  <dl class="tape" id="tape"></dl>
+</header>
+
+<div class="filters" id="filters"></div>
+<ol class="board" id="board"></ol>
+<p class="hint"><span id="count"></span><span>Bar length &#8776; round size</span></p>
+
+<section class="sec">
+  <p class="kicker">Section II &middot; newest first</p>
+  <h2>Just Funded</h2>
+  <p>The other end of the market: pre-seed and seed cheques written in the last few weeks, most of them a company&rsquo;s first institutional round. Ordered by announcement date, because at this size recency is the only ranking that means anything.</p>
+</section>
+<ol class="board" id="seeds"></ol>
+<p class="hint"><span id="scount"></span><span>Bar length &#8776; round size, this section only</span></p>
+
+<footer>
+  Rolling 90-day window &mdash; a round drops off this board three months after it is announced, however
+  large it was. Ranked on announced round size, not valuation. Figures are as reported by the company or
+  lead investor; each entry links to its source. Rounds are point-in-time snapshots and say nothing about
+  current performance.
+</footer>
+</div>
+
+<dialog id="dlg"></dialog>
+
+<script>
+/*BUILT_START*/
+const BUILT = "2026-09-27";
+/*BUILT_END*/
+/*DATA_START*/
+const DATA = [
+{
+"name": "DeepSeek",
+"sector": "Foundation Models",
+"amt": 7400,
+"stage": "Private round",
+"date": "Jul 17, 2026",
+"iso": "2026-07-17",
+"valuation": "~$52B",
+"does": "China's open-weight frontier lab",
+"hq": "Hangzhou, China",
+"what": "Trains and releases open-weight large language models, including the R1 reasoning family.",
+"founders": "Liang Wenfeng — founder of the quant hedge fund High-Flyer, which incubated and self-funded DeepSeek",
+"investors": "Tencent, CATL, and Liang Wenfeng himself (20B yuan)",
+"why": "Roughly 50B yuan came in via a regulatory filing disclosed by Caixin, breaking the company's founding stance of no fundraising, no IPO, no commercialisation. Reporting attributes the reversal mainly to talent-retention pressure and to funding domestic compute as export controls limit Nvidia access. Tencent, CATL, NetEase and JD.com joining makes it the largest first external round ever raised by a Chinese AI company.",
+"src": "https://www.caixinglobal.com/2026-07-17/deepseek-reaches-52-billion-valuation-in-round-backed-by-tencent-catl-102465358.html"
+},
+{
+"name": "Databricks",
+"sector": "Data/Security",
+"amt": 5000,
+"stage": "Private round",
+"date": "Aug 13, 2026",
+"iso": "2026-08-13",
+"valuation": "$190B",
+"does": "data platform turned agent platform",
+"hq": "San Francisco, USA",
+"what": "Sells a cloud platform where companies store their data and build analytics and AI applications on top of it.",
+"founders": "Ali Ghodsi, Matei Zaharia (creator of Apache Spark), Ion Stoica and four other UC Berkeley AMPLab researchers",
+"investors": "Coatue, Blackstone, MGX",
+"why": "Crossed a $7B annualized revenue run-rate in fiscal Q2, growing more than 80% year over year. This was its second $5B raise of 2026 — the previous one closed at $134B about six months earlier, so the valuation rose roughly 42% in half a year. Proceeds are earmarked for the products that let enterprises build and operate AI agents on their own data.",
+"src": "https://www.cnbc.com/2026/08/13/databricks-funding-round-190-billion-valuation.html"
+},
+{
+"name": "Crusoe",
+"sector": "AI Infrastructure",
+"amt": 3900,
+"stage": "Series F",
+"date": "Sep 18, 2026",
+"iso": "2026-09-18",
+"valuation": "$30.9B",
+"does": "owns the power and the datacenter",
+"hq": "Denver, USA",
+"what": "Builds and operates power generation and datacenter capacity, and rents GPU compute to AI companies.",
+"founders": "Chase Lochmiller (ex-Jump Trading quant, ex-Polychain) and Cully Cavness, from the energy industry",
+"investors": "Atreides Management, Mubadala Capital, Valor Equity Partners",
+"why": "Over $140B in total contracted value, more than 6GW of gross contracted capacity with roughly 1GW already operational, and cloud bookings up more than 20x year over year. Its managed inference business passed $100M in contracted ARR, and it signed a $13B five-year GPU supply contract with Jane Street. Owning generation as well as racks is the differentiator while grid connection is the real bottleneck on AI capacity.",
+"src": "https://pulse2.com/crusoe-raises-3-9-billion-series-f-at-30-9-billion-valuation-to-expand-vertically-integrated-ai-infrastructure-platform/"
+},
+{
+"name": "Mistral AI",
+"sector": "Foundation Models",
+"amt": 3580,
+"stage": "Series D",
+"date": "Sep 8, 2026",
+"iso": "2026-09-08",
+"valuation": "~$25B",
+"does": "Europe's sovereign frontier lab",
+"hq": "Paris, France",
+"what": "Builds open-weight and commercial large language models plus the platform enterprises use to deploy them.",
+"founders": "Arthur Mensch (ex-DeepMind), Guillaume Lample (ex-Meta, led Llama), Timothée Lacroix (ex-Meta FAIR)",
+"investors": "Samsung Electronics",
+"why": "€3B is the largest private tech round ever raised in Europe, lifting Mistral past €21B post-money about a year after its previous round. The thesis is sovereign AI: European and allied governments and corporates that want frontier models they can host themselves rather than call over a US API. Samsung leading — after ASML led the last round — ties Mistral to a strategic hardware partner as well as a financial one.",
+"src": "https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/"
+},
+{
+"name": "Cognition",
+"sector": "AI Coding",
+"amt": 2000,
+"stage": "Series E",
+"date": "Sep 8, 2026",
+"iso": "2026-09-08",
+"valuation": "$48B",
+"does": "Devin, the AI software engineer",
+"hq": "San Francisco, USA",
+"what": "Sells Devin, an autonomous coding agent that takes engineering tasks, edits repositories and opens pull requests.",
+"founders": "Scott Wu, Steven Hao and Walden Yan — competitive-programming olympiad medalists",
+"investors": "Andreessen Horowitz, Accel",
+"why": "Devin's run-rate revenue reached roughly $900M–$1B annualized at the time of the round, up from $492M four months earlier. The valuation nearly doubled from $26B at the May Series D, three months prior. The capital funds a leased Nvidia cluster and a cash burn reported as potentially reaching $800M this year — investors are underwriting a land-grab in AI coding against Cursor, Claude Code and GitHub.",
+"src": "https://cognition.com/blog/series-e"
+},
+{
+"name": "Fireworks AI",
+"sector": "AI Infrastructure",
+"amt": 1505,
+"stage": "Series D",
+"date": "Jul 16, 2026",
+"iso": "2026-07-16",
+"valuation": "$17.5B",
+"does": "inference for specialised models",
+"hq": "San Mateo, USA",
+"what": "Runs a platform for hosting, fine-tuning and serving open-source and customised AI models at production scale.",
+"founders": "Lin Qiao, who previously led PyTorch at Meta, with much of the founding team from Meta's AI infrastructure group",
+"investors": "Atreides Management, Index Ventures, TCV",
+"why": "Closed with annualized recurring revenue above $1B, and daily tokens served nearly tripled from 15 trillion to more than 40 trillion. The demand driver is enterprises moving off frontier closed models onto smaller specialised ones for cost — exactly what Fireworks optimises for. Nvidia and Lightspeed re-upped alongside the new leads.",
+"src": "https://www.cnbc.com/2026/07/16/fireworks-nvidia-cloud-ai-startup-value.html"
+},
+{
+"name": "Fluidstack",
+"sector": "AI Infrastructure",
+"amt": 1500,
+"stage": "Private round",
+"date": "Sep 3, 2026",
+"iso": "2026-09-03",
+"valuation": "$18B",
+"does": "a GPU cloud that owns no chips",
+"hq": "New York & London",
+"what": "Aggregates and resells other operators' GPU datacenter capacity to AI labs instead of owning chips itself.",
+"founders": "Gary Wu and Jamie Cox (individual backgrounds not disclosed in reporting)",
+"investors": "Jane Street Capital",
+"why": "The valuation more than doubled from $7.5B two months earlier, on revenue reported as scaling from about $1.8M to a projected $660M. The pull is large multi-year capacity contracts with frontier labs, including a reported large Anthropic deal, which Fluidstack fills by orchestrating third-party sites — so growth is not gated on its own capex. Jane Street, already a heavy buyer of AI compute, led.",
+"src": "https://www.techtimes.com/articles/326746/20260905/fluidstack-closes-15b-revenue-soars-18m-660m-projected-while-owning-zero-chips.htm"
+},
+{
+"name": "River AI",
+"sector": "AI Infrastructure",
+"amt": 1100,
+"stage": "Seed",
+"date": "Aug 11, 2026",
+"iso": "2026-08-11",
+"valuation": "Undisclosed",
+"does": "two months old, $1.1B seed",
+"hq": "Palo Alto, USA",
+"what": "Provides an API for fine-tuning, reinforcement-learning training and serving of open-weight models, plus a consumer personal-AI product.",
+"founders": "Igor Babuschkin — xAI co-founder, previously a researcher at DeepMind and OpenAI",
+"investors": "General Catalyst, AMP PBC",
+"why": "Almost entirely a bet on founder pedigree: River was about two months old and pre-revenue when General Catalyst and AMP PBC put in $1.1B, with Nvidia, AMD Ventures, Y Combinator and Temasek joining. The technical claim is RL fine-tuning runs finishing in 15–20 minutes with no infrastructure team, at 2–4x cost savings versus closed models. It is one of the largest seed rounds on record.",
+"src": "https://techcrunch.com/2026/08/11/general-catalyst-leads-1-1b-round-into-2-month-old-river-ai/"
+},
+{
+"name": "Together AI",
+"sector": "AI Infrastructure",
+"amt": 800,
+"stage": "Series C",
+"date": "Jul 1, 2026",
+"iso": "2026-07-01",
+"valuation": "$8.3B",
+"does": "GPU cloud for open models",
+"hq": "San Francisco, USA",
+"what": "Operates GPU clusters and an inference and training platform specialised for open-source models.",
+"founders": "Vipul Ved Prakash (sold Topsy to Apple), Ce Zhang (ETH Zurich), Chris Ré and Percy Liang (Stanford)",
+"investors": "Aramco Ventures",
+"why": "Reported more than $1B in annual bookings, with usage of open-source models on the platform tripling year over year, and more than doubled its valuation from the prior round. The money funds a stated ~50x expansion of compute capacity over five years. Aramco Ventures leading signals sovereign-wealth appetite for neocloud capacity; Nvidia, Vista and General Catalyst also joined.",
+"src": "https://techcrunch.com/2026/07/01/neocloud-together-ai-raises-800m-leaps-to-8-3b-valuation/"
+},
+{
+"name": "Temporal Technologies",
+"sector": "AI Infrastructure",
+"amt": 550,
+"stage": "Series E",
+"date": "Sep 14, 2026",
+"iso": "2026-09-14",
+"valuation": "$12.55B",
+"does": "keeps long agent runs alive",
+"hq": "Bellevue, USA",
+"what": "An open-source platform that keeps long-running workflows, including AI agent runs, alive and recoverable when steps fail.",
+"founders": "Samar Abbas and Maxim Fateev — built Uber's Cadence workflow engine, and worked on AWS Simple Workflow Service",
+"investors": "Lightspeed, Wellington Management, Goldman Sachs Alternatives",
+"why": "Agent workloads now run for hours or days across flaky tool calls, which turns durable execution from a backend nicety into required infrastructure — the pitch investors bought. Growth comes from existing large enterprise workflow customers expanding into agent orchestration on the same runtime rather than from new logos. Tiger Global joined the co-leads.",
+"src": "https://temporal.io/blog/temporal-raises-usd550m-series-e-at-usd12-55b-valuation-ai"
+},
+{
+"name": "Chai Discovery",
+"sector": "AI Applications",
+"amt": 400,
+"stage": "Series C",
+"date": "Jul 14, 2026",
+"iso": "2026-07-14",
+"valuation": "$3.8B",
+"does": "frontier models for molecules",
+"hq": "San Francisco, USA",
+"what": "Builds AI models that predict and design protein and molecular structures for drug discovery.",
+"founders": "Joshua Meier (ex-OpenAI, protein research at Meta AI), Jack Dent (ex-Stripe), Matthew McPartlon, Jacques Boitreaud",
+"investors": "Index Ventures, Kleiner Perkins, Sequoia Capital",
+"why": "Valuation roughly tripled from $1.3B seven months earlier, on the back of Chai models posting state-of-the-art results on structure prediction and antibody design benchmarks. The company releases models openly to researchers while selling design capability to pharma partners, which has made it a default external benchmark alongside AlphaFold. OpenAI, Thrive and General Catalyst all re-upped.",
+"src": "https://endpoints.news/chai-discovery-gets-400m-tripling-valuation-from-seven-months-ago/"
+},
+{
+"name": "Lovable",
+"sector": "AI Coding",
+"amt": 400,
+"stage": "Series C",
+"date": "Aug 12, 2026",
+"iso": "2026-08-12",
+"valuation": "$13.3B",
+"does": "Europe's vibe-coding breakout",
+"hq": "Stockholm, Sweden",
+"what": "Lets non-engineers build and deploy working web apps by describing them in plain language.",
+"founders": "Anton Osika, creator of the open-source GPT-Engineer project, and Fabian Hedin",
+"investors": "Menlo Ventures, Scaleup Europe Fund",
+"why": "ARR was tracking to roughly $600M by the end of August, up from $500M in June, less than two years after launch — one of the fastest revenue ramps on record. The valuation doubled from $6.6B in December. It is also a European sovereignty play: the Scaleup Europe Fund co-led to keep the continent's fastest-growing software company independent, with Tencent, Accel and CapitalG also in.",
+"src": "https://techcrunch.com/2026/08/12/lovable-confirms-new-13-3b-valuation-raises-another-400m/"
+},
+{
+"name": "Gimlet Labs",
+"sector": "AI Infrastructure",
+"amt": 300,
+"stage": "Series B",
+"date": "Sep 4, 2026",
+"iso": "2026-09-04",
+"valuation": "$3B",
+"does": "runs your model on any silicon",
+"hq": "San Francisco, USA",
+"what": "Runs the same AI models across different vendors' chips and routes each request to whichever silicon serves it fastest or cheapest.",
+"founders": "Zain Asgar — co-founded Pixie Labs (acquired by New Relic), ex-Google engineer, Stanford adjunct lecturer",
+"investors": "Andreessen Horowitz",
+"why": "Gimlet claims the first inference stack that compiles and schedules agentic workloads across heterogeneous silicon, which matters as buyers try to escape single-vendor GPU pricing. Total funding reached $392M less than a year after leaving stealth. The strategic investor list is the tell: Arm, Samsung Ventures and M12, alongside trading firms Hudson River Trading and XTX Markets that buy inference at scale.",
+"src": "https://www.globenewswire.com/news-release/2026/09/04/3356707/0/en/now-valued-at-3-billion-gimlet-labs-raises-300-million-in-series-b-led-by-andreessen-horowitz-for-industry-s-first-multi-silicon-inference-cloud-for-agentic-ai.html"
+},
+{
+"name": "Upwind Security",
+"sector": "Data/Security",
+"amt": 300,
+"stage": "Private round",
+"date": "Sep 2026",
+"iso": "2026-09-01",
+"valuation": "$3.8B",
+"does": "cloud security from what's running",
+"hq": "Tel Aviv, Israel",
+"what": "Monitors what is actually running in a company's cloud to find and prioritise real attack paths, rather than scanning configuration alone.",
+"founders": "Amiram Shachar, Tal Zur, Lavi Ferdman and Liran Polak — the founding team behind Spot.io, acquired by NetApp in 2020",
+"investors": "Bessemer Venture Partners, TCV",
+"why": "ARR went from under $20M at the end of 2025 to an estimated $50–60M by mid-2026, with the company targeting $100M by year end and reporting 900% year-over-year growth on a doubled customer base including Roku, Siemens, Nubank, Wix and Peloton. Valuation rose from about $1.5B in January to $3.8B in roughly eight months. Second-time founders with a prior NetApp exit made the round fast to underwrite.",
+"src": "https://www.calcalistech.com/ctechnews/article/0kbwgdw01"
+}
+];
+/*DATA_END*/
+/*SEEDS_START*/
+const SEEDS = [
+{
+"name": "Robocurve",
+"sector": "Robotics",
+"amt": 10,
+"stage": "Seed",
+"date": "Sep 15, 2026",
+"iso": "2026-09-15",
+"yc": "YC S26",
+"does": "independent report cards for robot AI",
+"hq": "San Francisco, USA",
+"what": "An independent third party that tests how well frontier AI models control real robots, and publishes the results.",
+"founders": "Jay Chooi — Harvard CS/maths graduate, 2025 Rhodes Scholar, worked on AI evaluation and safety at the UK AI Security Institute and MATS",
+"investors": "Initialized Capital, Notable Capital, Y Combinator",
+"why": "Distribution arrived before revenue: the evaluation framework has been downloaded over 97,000 times, the research has more than 6 million views, and 200+ institutions are enrolled in its academic benchmarking programme. The finding that got investors' attention was that general frontier language models beat specialised vision-language-action models on some robot control tasks — which reframes who the robotics model vendors will be. It is incorporated as a Public Benefit Corporation with a legal duty to publish findings, so independence from the labs it audits is the product, not a policy.",
+"src": "https://robocurve.org/blog/seed-raise/"
+},
+{
+"name": "Feather Robotics",
+"sector": "Robotics",
+"amt": 7.6,
+"stage": "Pre-seed",
+"date": "Sep 24, 2026",
+"iso": "2026-09-24",
+"does": "a modular humanoid you can buy and hack",
+"hq": "East Palo Alto, USA",
+"what": "Sells a $29,990 wheeled humanoid robot with swappable parts and an SDK, so developers can run their own AI models on it.",
+"founders": "Hoa Mai — founded humanoid startup Kind Humanoid and sold it to 1X — and Parsa Bakhtiari, who scaled Tesla Model 3 production through the 2018 crunch",
+"investors": "Gradient Ventures, Builder Capital, Geometry",
+"why": "Passed $1M in revenue within nine months of its first customer order while spending only a fraction of the round — unusual for hardware this early — with buyers including manufacturers and a food service company doing $4B a year. Price is the wedge: $29,990 against $68,000–$135,000 for vertically integrated rivals, reached with a wheeled base and simplified modular hardware with fewer failure points. Gradient's stated reason was positional: the only US startup selling a modular humanoid developer platform, run by founders with real manufacturing scars.",
+"src": "https://techcrunch.com/2026/09/24/meet-feather-the-startup-building-the-android-of-robotics-for-developers/"
+},
+{
+"name": "Creem",
+"sector": "Developer Tools",
+"amt": 5.4,
+"stage": "Seed",
+"date": "Sep 17, 2026",
+"iso": "2026-09-17",
+"does": "checkout and tax plumbing for AI sellers",
+"hq": "Tallinn, Estonia",
+"what": "A billing platform handling checkout, tax compliance, payouts, subscriptions and affiliate payments for companies selling AI products.",
+"founders": "Gabriel Ferraz and Alec Erasmus, both formerly at Google and Adyen, with backgrounds in payments and embedded finance",
+"investors": "Inovo VC, Practica Capital, Antler",
+"why": "Revenue roughly doubled to about €2M ARR ahead of the round, which is why a new lead came in on top of the 2025 pre-seed and took total funding to €7M. Both founders did payments at Adyen and Google, so the compliance surface — tax across jurisdictions, payouts, merchant-of-record duties — is their actual trade rather than a learning curve. Creem 2.0 lets an AI agent configure and tune a store from a single prompt; angels include Bolt's Markus Villig and the Ready Player Me founders.",
+"src": "https://tech.eu/2026/09/17/creem-secures-eur5m-to-build-financial-infrastructure-for-ai-native-startups/"
+},
+{
+"name": "Expanse",
+"sector": "AI Infrastructure",
+"amt": 5.3,
+"stage": "Seed",
+"date": "Sep 16, 2026",
+"iso": "2026-09-16",
+"does": "predicts what a GPU job will need",
+"hq": "San Francisco & London",
+"what": "Software that predicts how much compute an AI workload will consume before it runs, so clusters can be packed instead of over-provisioned.",
+"founders": "Ismaeel Bashir, Nikodem Bieniek, Eren Mendi and Yafet Melake — four University of Edinburgh informatics engineers who had run large-scale infrastructure in quant finance and at supercomputing centres",
+"investors": "Crane Venture Partners, PXN Ventures, AIP Seed",
+"why": "The technical trick is the pitch: predict resource demand ahead of execution and the team claims a cluster finishes up to twice the work on the same hardware — a direct attack on GPU waste now that compute is the biggest line item. The four founders had already operated infrastructure at that scale in quant finance and supercomputing, and started the company in October 2025 while two were still students. Crane led with former DeepMind researchers angel-investing, which is a credibility signal on the scheduling claim rather than a revenue one.",
+"src": "https://expanse.sh/blog/expanse-raises-5-3m-seed"
+},
+{
+"name": "Health Force",
+"sector": "AI Applications",
+"amt": 4.5,
+"stage": "Seed",
+"date": "Sep 17, 2026",
+"iso": "2026-09-17",
+"does": "agents that run the hospital back office",
+"hq": "Barcelona, Spain",
+"what": "AI agents that join a hospital's operations team and carry out administrative processes end to end under human supervision.",
+"founders": "Fadi Haddad and Dr Juan Suárez, who founded the company in Vienna in 2022",
+"investors": "LUMO Labs, Target Global, Step Venture",
+"why": "The distinction investors bought is autonomy over assistance — the agents own a whole process rather than drafting text for a human, which is what makes them chargeable per workflow instead of per seat. The company has been building since 2022, so this is a first institutional round for a patient team, and the money extends the agent catalogue into quality reporting, clinical trial operations and resource optimisation. No customer count or revenue was disclosed, so the round rests on the deployment model and a European hospital pipeline.",
+"src": "https://www.eu-startups.com/2026/09/barcelona-based-health-force-raises-e4-2-million-to-streamline-hospital-operations-with-ai-agents"
+},
+{
+"name": "Kontext",
+"sector": "Data/Security",
+"amt": 4,
+"stage": "Seed",
+"date": "Sep 26, 2026",
+"iso": "2026-09-26",
+"does": "a local guardrail for agent tool calls",
+"hq": "Munich, Germany",
+"what": "A security program installed on a company's own machines that checks every action an AI agent is about to take against company policy, and can block it before it runs.",
+"founders": "Jens Ernstberger, fresh from a PhD in system security and applied cryptography, and Michel Osswald, an electrical engineer turned security engineer",
+"investors": "42CAP, a16z CSX, High-Tech Gründerfonds",
+"why": "The wedge is that identity and access tooling was built for a human doing one action at a time, while an agent authenticates once and then acts across a dozen systems with nobody watching each step. Kontext runs as a local daemon with no outbound network connection and has an observe-only mode, which is what makes regulated buyers such as financial services willing to install it at all. With no disclosed revenue, this is a team-and-thesis round — Ernstberger's cryptography doctorate is the credential being funded.",
+"src": "https://teknowire.com/kontext-raises-4-million-seed-round-to-secure-ai-agent-actions/"
+},
+{
+"name": "Spiich",
+"sector": "AI Agents",
+"amt": 3.2,
+"stage": "Seed",
+"date": "Sep 23, 2026",
+"iso": "2026-09-23",
+"does": "agents do the sales admin, not the selling",
+"hq": "Stockholm, Sweden",
+"what": "AI agents that handle a sales rep's prospecting research, meeting prep, CRM updates and follow-up messages.",
+"founders": "Johan Torssell and Dennis Hadzialic, who founded Spiich in Stockholm in June 2025",
+"investors": "Ugly Duckling Ventures, Cherry Ventures, Alliance VC",
+"why": "This lands ten months after a €600k pre-seed, so it is an up-round on execution rather than a first cheque, taking total funding to €3.6M. The product is scoped so the agents never touch the sale itself — they take only the admin that Salesforce estimates eats 78% of a rep's time, which sidesteps the trust objection that kills most agentic sales tools. Pre-seed backer Ampli followed on, and the cap table carries operator angels from Lovable, Neo4j, Tandem Health and OpenAI.",
+"src": "https://www.eu-startups.com/2026/09/stockholms-spiich-raises-e3-million-to-let-ai-handle-admin-work-while-sales-teams-focus-on-customers"
+},
+{
+"name": "InTouchNow",
+"sector": "AI Agents",
+"amt": 2.9,
+"stage": "Seed",
+"date": "Sep 21, 2026",
+"iso": "2026-09-21",
+"does": "the AI receptionist answering GP phones",
+"hq": "Hertfordshire, UK",
+"what": "An AI voice agent that answers NHS GP practice phones around the clock, books appointments and collects triage information.",
+"founders": "Daniel Park, who spent five years running the call centres that handle GP practice reception calls before starting the company",
+"investors": "Ada Ventures, Exceptional Ventures, Kadmos Capital",
+"why": "Already live in more than 150 practices, resolving 50–70% of calls without a human and routing the rest, so investors were buying deployed scale rather than a deck. An independent analysis across 18 practices covering 240,000 registered patients showed answer rates rising from 55.9% to 65.6%, calls answered within two minutes going from 50.7% to 67.0%, and average wait time falling 32%. Ada cited founder-problem fit explicitly; it is reported as one of the firm's largest seed cheques and the first VC investment into an NHS primary-care voice agent.",
+"src": "https://businesscloud.co.uk/news/vcs-back-intouchnows-ai-voice-agents-for-nhs/"
+},
+{
+"name": "Bynario",
+"sector": "Data/Security",
+"amt": 2.3,
+"stage": "Pre-seed",
+"date": "Sep 11, 2026",
+"iso": "2026-09-11",
+"does": "AI bug hunting turned into a platform",
+"hq": "Milan, Italy",
+"what": "An autonomous application security platform that finds, confirms, ranks and fixes vulnerabilities across code, cloud infrastructure and the software supply chain.",
+"founders": "Alfredo Pesoli, Giancarlo Russo and Lorenzo Cavallaro, whose AI-assisted research found and disclosed real macOS flaws",
+"investors": "360 Capital, PranaVentures",
+"why": "The team used frontier models to find a serious flaw in Apple's macOS Screen Sharing that Apple subsequently patched, and Pesoli told the FT the bug could have fetched up to $200,000 on the black market — a working demonstration rather than a claim. The round funds generalising that pipeline from one-off research into a product that validates and prioritises findings, which is the step that separates it from noisy scanners. No customers or revenue disclosed, so investors are buying proof of capability and the founders' security research pedigree.",
+"src": "https://www.eu-startups.com/2026/09/milan-based-bynario-raises-e2-1-million-pre-seed-after-ai-research-exposed-serious-apple-vulnerabilities"
+},
+{
+"name": "ByteAsk",
+"sector": "AI Coding",
+"amt": 1,
+"stage": "Pre-seed",
+"date": "Sep 24, 2026",
+"iso": "2026-09-24",
+"does": "a coding agent built only for C++",
+"hq": "San Francisco, USA",
+"what": "An AI coding agent with a sandboxed build-and-test environment that works only on C and C++ codebases.",
+"founders": "Anirudha Kulkarni and Pratyush Saini, who incorporated the company in 2026",
+"investors": "Y Combinator, Entrepreneur First",
+"why": "The wedge is deliberate narrowness: general coding agents are trained mostly on web-language code and degrade on systems code, so ByteAsk sells into defense, aerospace, robotics, high-frequency trading and embedded automotive, where the buyer is a systems or on-call engineer. The technical bet is a proprietary post-training method for C++ and a dedicated low-level-code model planned within six to eight months. At $1M with no revenue disclosed, this is plainly a team-and-thesis cheque from two accelerators.",
+"src": "https://www.finsmes.com/2026/09/byteask-raises-1m-in-pre-seed-funding.html"
+}
+];
+/*SEEDS_END*/
+
+const money = m => m >= 1000 ? '$' + +(m/1000).toFixed(2) + 'B' : '$' + +m.toFixed(2) + 'M';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+DATA.sort((a,b) => b.amt - a.amt);
+SEEDS.sort((a,b) => String(b.iso||'').localeCompare(String(a.iso||'')));
+const ALL = DATA.concat(SEEDS);
+const max = DATA.length ? DATA[0].amt : 1;
+const smax = SEEDS.length ? Math.max(...SEEDS.map(d => d.amt)) : 1;
+const total = DATA.reduce((s,d) => s + d.amt, 0);
+let filter = 'All';
+
+document.getElementById('asof').textContent = new Date(BUILT + 'T12:00:00Z')
+  .toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+document.getElementById('tape').innerHTML = [
+  ['Window', '90 days'],
+  ['Major rounds', DATA.length],
+  ['Capital raised', money(total)],
+  ['Seed rounds', SEEDS.length]
+].map(([k,v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+
+const sectors = ['All', ...[...new Set(DATA.map(d => d.sector))]];
+document.getElementById('filters').innerHTML = sectors.map(s =>
+  `<button type="button" data-s="${esc(s)}" aria-pressed="${s === 'All'}">${esc(s)}</button>`).join('');
+
+const rowHTML = (d, rank, hi, idx) => `<li><button class="row" type="button" data-i="${idx}">
+  <span class="bar" style="width:${(d.amt/hi*100).toFixed(1)}%"></span>
+  <span class="who">
+    <span class="name">${esc(d.name)} <span class="sector">${esc(d.sector)}</span>${d.yc ? ` <span class="sector yc">${esc(d.yc)}</span>` : ''}</span>
+    <span class="amt"><b>${money(d.amt)}</b><span>${esc(d.stage)} &middot; ${esc(d.date)}</span></span>
+    <span class="does">${esc(d.does)}</span>
+  </span>
+  <span class="rank${rank < 3 ? ' top' : ''}">${String(rank+1).padStart(2,'0')}</span>
+</button></li>`;
+
+const board = document.getElementById('board');
+function render(){
+  const rows = DATA.filter(d => filter === 'All' || d.sector === filter);
+  board.innerHTML = rows.map(d => rowHTML(d, DATA.indexOf(d), max, DATA.indexOf(d))).join('');
+  document.getElementById('count').textContent = `Showing ${rows.length} of ${DATA.length} rounds · last 90 days`;
+}
+render();
+
+document.getElementById('seeds').innerHTML =
+  SEEDS.map((d,i) => rowHTML(d, i, smax, DATA.length + i)).join('');
+document.getElementById('scount').textContent = SEEDS.length
+  ? `${SEEDS.length} rounds · newest ${SEEDS[0].date}` : 'No seed rounds logged yet';
+
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('button[data-s]'); if (!b) return;
+  filter = b.dataset.s;
+  document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  render();
+});
+
+const dlg = document.getElementById('dlg');
+function openRow(e){
+  const b = e.target.closest('.row'); if (!b) return;
+  const d = ALL[+b.dataset.i];
+  dlg.innerHTML = `
+  <div class="d-head">
+    <span class="sector">${esc(d.sector)}</span>${d.yc ? ` <span class="sector yc">${esc(d.yc)}</span>` : ''}
+    <h2>${esc(d.name)}</h2>
+    <p class="d-money"><b>${money(d.amt)}</b><span>${esc(d.stage)} &middot; ${esc(d.date)}${d.valuation ? ' &middot; ' + esc(d.valuation) + ' valuation' : ''}</span></p>
+  </div>
+  <div class="d-body">
+    <h3>What it is</h3><p>${esc(d.what)}</p>
+    <dl class="facts">
+      <div><dt>Founded by</dt><dd>${esc(d.founders)}</dd></div>
+      <div><dt>Led by</dt><dd>${esc(d.investors)}</dd></div>
+      <div><dt>Based in</dt><dd>${esc(d.hq)}</dd></div>
+    </dl>
+    <h3>Why the money moved</h3>
+    <p class="why">${esc(d.why)}</p>
+    <div class="d-foot">
+      ${d.src ? `<a href="${esc(d.src)}" target="_blank" rel="noopener">Source</a>` : '<span></span>'}
+      <button type="button" onclick="this.closest('dialog').close()">Close</button>
+    </div>
+  </div>`;
+  dlg.showModal();
+}
+board.addEventListener('click', openRow);
+document.getElementById('seeds').addEventListener('click', openRow);
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+</script>
