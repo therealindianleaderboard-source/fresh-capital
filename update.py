@@ -20,6 +20,7 @@ import os
 import pathlib
 import re
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -47,7 +48,11 @@ UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
       "Chrome/140.0.0.0 Safari/537.36")
 
 # Free-tier grounding is unavailable, so no tools are used and any text model works.
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
+# The flagship flash model gets demand-throttled (503); the lite models are quieter
+# and carry a larger free daily request allowance, so they stand in when it is busy.
+MODELS = [m.strip() for m in os.environ.get(
+    "GEMINI_MODELS", "gemini-3.8-flash,gemini-3.5-flash-lite,gemini-3.1-flash-lite"
+).split(",") if m.strip()]
 
 FUNDING = re.compile(
     r"\b(raise[sd]?|raising|secure[sd]|closes?|lands?|nets?|bags?)\b|"
@@ -165,11 +170,30 @@ Return ONLY a JSON array. Each element has exactly these keys:
 {blocks}"""
 
 
-def ask(prompt):
+def transient(msg):
+    """Worth waiting out, as opposed to a wrong model or a bad key."""
+    return any(t in msg.lower() for t in
+               ("503", "429", "high demand", "overloaded", "unavailable",
+                "quota", "rate limit", "timeout", "deadline"))
+
+
+def ask(prompt, tries=3):
+    """First model that answers wins. Backs off on load, moves on for anything else."""
     from google import genai
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-    r = client.interactions.create(model=MODEL, input=prompt)
-    return r.output_text
+    last = "no models configured"
+    for model in MODELS:
+        for attempt in range(tries):
+            try:
+                return client.interactions.create(model=model, input=prompt).output_text
+            except Exception as e:                  # SDK error types are nested and vary
+                last = f"{model}: {type(e).__name__}: {str(e)[:160]}"
+                print(f"  {last}")
+                if not transient(str(e)):
+                    break                           # bad model or bad key, try the next
+                if attempt < tries - 1:
+                    time.sleep(8 * (attempt + 1))
+    sys.exit(f"every model failed, board left untouched - last error: {last}")
 
 
 def parse_json(text):
@@ -305,6 +329,9 @@ def selftest():
     assert len(m) == 3, m                                   # merged, not duplicated
     assert next(e for e in m if e["name"] == "Real Co")["amt"] == 900   # newer iso wins
     assert merge(old, [good | {"amt": 1, "iso": "2026-01-01"}])[0]["amt"] == 400
+
+    assert transient("Error code: 503 - high demand") and transient("429 quota")
+    assert not transient("404 model not found") and not transient("invalid api key")
 
     assert strip_html("<p>a <b>b</b><script>junk()</script></p>&amp;") == "a b &"
     assert FUNDING.search("Acme raises $4M seed") and not FUNDING.search("Acme hires a CFO")

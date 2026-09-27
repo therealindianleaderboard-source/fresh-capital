@@ -43,7 +43,8 @@ grounding at 500 requests/day, but it is now closed to new API keys.)
 So this fetches the news itself and uses Gemini for extraction only, which is a plain text
 call and free. One call per day, against a free-tier limit of roughly 20 requests/day.
 
-Override the model with the `GEMINI_MODEL` env var. If you ever move to a paid tier,
+Override the model list with the `GEMINI_MODELS` env var (comma separated; each is tried in
+order, with backoff, when the one before is demand-throttled). If you ever move to a paid tier,
 grounded search is about $14 per 1,000 searches.
 
 ## Running it by hand
