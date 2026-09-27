@@ -1,3 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Without this phones use a ~980px virtual viewport, zoom the page out, and no
+     mobile media query ever matches. The Artifact host injects it; Pages does not. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="The biggest AI and software funding rounds of the last 90 days, ranked by cheque size. Updated daily.">
 <title>Fresh Capital</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -146,6 +155,8 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
   footer{font-size:12px;line-height:1.75}
 }
 </style>
+</head>
+<body>
 
 <div class="wrap">
 <header class="mast">
@@ -718,3 +729,5 @@ board.addEventListener('click', openRow);
 document.getElementById('seeds').addEventListener('click', openRow);
 dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 </script>
+</body>
+</html>
