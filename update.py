@@ -163,6 +163,7 @@ Return ONLY a JSON array. Each element has exactly these keys:
              million). Convert other currencies to USD at a rough current rate.
   stage      "Series A".."Series F", "Seed", "Pre-seed", or "Private round"
   iso        the item's DATE, as YYYY-MM-DD
+  src        that item's URL, copied exactly from its URL line
   valuation  post-money if the item states one, else "Undisclosed"
   does       3-8 words for a dense list row, lowercase-ish, e.g. "checkout plumbing for AI sellers"
   hq         "City, Country"
@@ -382,6 +383,12 @@ def selftest():
     # keeps only the item that is funding news, in-window, and has a real link
     assert [i["link"] for i in got] == ["https://e.com/1"], got
     assert got[0]["desc"] == "Acme, an AI firm"
+
+    # every field the page needs must actually be requested; a key described in the
+    # prose but missing from this list silently drops every entry
+    keys = re.search(r"Each element has exactly these keys:(.*?)\n\n",
+                     build_prompt([], today), re.S).group(1)
+    assert not [k for k in HARD if f"\n  {k} " not in keys], f"prompt omits a hard field:\n{keys}"
 
     page = HTML.read_text()
     assert len(read_block(page, "DATA")) > 0 and len(read_block(page, "SEEDS")) > 0
