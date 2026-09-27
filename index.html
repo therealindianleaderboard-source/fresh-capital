@@ -48,30 +48,36 @@ h1 em{font-family:var(--body);font-style:italic;font-weight:300;letter-spacing:-
 .tape dd{margin:3px 0 0;font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 
 /* ---- filters ---- */
-.filters{display:flex;flex-wrap:wrap;gap:7px;margin:26px 0 4px}
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin:26px 0 20px}
 .filters button{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line);background:transparent;color:var(--text-2);border-radius:999px;cursor:pointer;transition:.15s}
 .filters button:hover{border-color:var(--brass);color:var(--text)}
 .filters button[aria-pressed="true"]{background:var(--brass-bar);border-color:var(--brass-bar);color:#14100a;font-weight:600}
 
 /* ---- board ---- */
-.board{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+.board{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .board li{border-bottom:1px solid var(--line-2)}
-.row{position:relative;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;
-  padding:15px 12px;background:transparent;border:0;text-align:left;color:inherit;font:inherit;cursor:pointer;overflow:hidden}
+.row{position:relative;width:100%;display:grid;grid-template-columns:minmax(0,1fr) 120px 200px 62px;gap:14px;align-items:center;
+  padding:14px 12px;background:transparent;border:0;text-align:left;color:inherit;font:inherit;cursor:pointer;overflow:hidden}
+/* column labels, so the board reads as a table rather than four stacks of text */
+.bhead{display:grid;grid-template-columns:minmax(0,1fr) 120px 200px 62px;gap:14px;padding:0 12px 7px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.bhead span:nth-child(2){text-align:right}
+.bhead span:nth-child(4){text-align:center}
 .row:hover{background:var(--surface)}
 .row:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
 .bar{position:absolute;inset:0 auto 0 0;background:var(--brass-soft);z-index:0;pointer-events:none}
-.row>*{position:relative;z-index:1}
-.rank{font-family:var(--mono);font-size:31px;font-weight:600;line-height:1;color:var(--brass);font-variant-numeric:tabular-nums;
-  letter-spacing:-.03em;padding:7px 11px;border:1px solid var(--brass);border-radius:3px;background:var(--brass-soft);justify-self:end}
+.row>*:not(.bar){position:relative;z-index:1}
+.rank{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1;color:var(--brass);font-variant-numeric:tabular-nums;
+  letter-spacing:-.03em;padding:6px 0;width:100%;text-align:center;border:1px solid var(--brass);border-radius:3px;
+  background:var(--brass-soft)}
 .rank.top{background:var(--brass-bar);border-color:var(--brass-bar);color:#14100a}
 .who{min-width:0;display:flex;flex-direction:column;gap:4px}
 .name{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:-.015em;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .sector{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);border:1px solid currentColor;border-radius:2px;padding:1px 5px;font-weight:500}
 .does{font-size:14.5px;color:var(--text-2);overflow-wrap:anywhere}
-.amt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.amt b{font-family:var(--mono);font-size:23px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.025em;color:var(--brass)}
-.amt span{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.amt{font-family:var(--mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.025em;
+  color:var(--brass);text-align:right;white-space:nowrap}
+.meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
 .sector.yc{color:var(--yc)}
 .sec{margin:52px 0 0;padding-top:24px;border-top:1px solid var(--text-2)}
 .sec h2{font-family:var(--disp);font-weight:700;font-size:clamp(23px,3.6vw,33px);letter-spacing:-.022em;margin:0;line-height:1.05}
@@ -112,12 +118,14 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
   .tape div{border-right:0;padding:9px 12px;background:var(--surface)}
   .tape dd{font-size:15px}
   .filters{gap:6px;margin-top:20px}
-  .row{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:15px 10px}
-  .rank{order:-1;align-self:flex-start;font-size:15px;line-height:1.2;padding:2px 7px;border-radius:2px;letter-spacing:.02em}
-  .who{align-self:stretch;gap:3px}
-  .name{font-size:18px;gap:7px}
-  .amt{gap:9px}
-  .amt b{font-size:22px}
+  /* two tidy stacks: text down the left, numbers down the right, both edges straight */
+  .bhead{display:none}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:start;padding:14px 10px}
+  .who{grid-area:1/1}
+  .amt{grid-area:1/2;font-size:21px;align-self:center}
+  .meta{grid-area:2/1}
+  .rank{grid-area:2/2;justify-self:end;width:auto;font-size:15px;line-height:1.2;padding:2px 8px;border-radius:2px;letter-spacing:.02em}
+  .name{font-size:17.5px;gap:7px}
   .does{font-size:13.5px}
   .sec{margin-top:40px;padding-top:20px}
   .hint{font-size:10px;letter-spacing:.06em}
@@ -140,6 +148,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
 </header>
 
 <div class="filters" id="filters"></div>
+<div class="bhead"><span>Company</span><span>Round</span><span>Stage &amp; date</span><span>Rank</span></div>
 <ol class="board" id="board"></ol>
 <p class="hint"><span id="count"></span><span>Bar length &#8776; round size</span></p>
 
@@ -148,6 +157,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
   <h2>Just Funded</h2>
   <p>The other end of the market: pre-seed and seed cheques written in the last few weeks, most of them a company&rsquo;s first institutional round. Ranked by cheque size, same as the board above; only rounds from the last 90 days make the list.</p>
 </section>
+<div class="bhead"><span>Company</span><span>Round</span><span>Stage &amp; date</span><span>Rank</span></div>
 <ol class="board" id="seeds"></ol>
 <p class="hint"><span id="scount"></span><span>Bar length &#8776; round size, this section only</span></p>
 
@@ -642,9 +652,10 @@ const rowHTML = (d, rank, hi, idx) => `<li><button class="row" type="button" dat
   <span class="bar" style="width:${(d.amt/hi*100).toFixed(1)}%"></span>
   <span class="who">
     <span class="name">${esc(d.name)} <span class="sector">${esc(d.sector)}</span>${d.yc ? ` <span class="sector yc">${esc(d.yc)}</span>` : ''}</span>
-    <span class="amt"><b>${money(d.amt)}</b><span>${esc(d.stage)} &middot; ${esc(d.date)}</span></span>
     <span class="does">${esc(d.does)}</span>
   </span>
+  <span class="amt">${money(d.amt)}</span>
+  <span class="meta">${esc(d.stage)} &middot; ${esc(d.date)}</span>
   <span class="rank${rank < 3 ? ' top' : ''}">${String(rank+1).padStart(2,'0')}</span>
 </button></li>`;
 
