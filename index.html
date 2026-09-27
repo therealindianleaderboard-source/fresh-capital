@@ -112,30 +112,38 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
 @media (max-width:620px){
   .wrap{padding:26px 15px 56px}
   h1{font-size:clamp(29px,8.6vw,42px)}
-  .dek{font-size:16px}
+  .dek{font-size:17px}
   /* four stat cells wrapped mid-row and left dangling borders — grid them instead */
   .tape{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:18px}
   .tape div{border-right:0;padding:9px 12px;background:var(--surface)}
-  .tape dd{font-size:15px}
+  .tape dd{font-size:17.5px}
+  .tape dt{font-size:11px}
   .filters{gap:6px;margin-top:20px}
+  .filters button{font-size:12px;padding:7px 12px}
   /* two tidy stacks: text down the left, numbers down the right, both edges straight */
   .bhead{display:none}
-  .row{grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:start;padding:14px 10px}
-  .who{grid-area:1/1}
-  .amt{grid-area:1/2;font-size:21px;align-self:center}
-  .meta{grid-area:2/1}
-  .rank{grid-area:2/2;justify-self:end;width:auto;font-size:15px;line-height:1.2;padding:2px 8px;border-radius:2px;letter-spacing:.02em}
-  .name{font-size:17.5px;gap:7px}
-  .does{font-size:13.5px}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:start;padding:16px 10px}
+  .who{grid-area:1/1;gap:5px}
+  .amt{grid-area:1/2;font-size:25px;align-self:center}
+  .meta{grid-area:2/1;font-size:12.5px;letter-spacing:.04em}
+  .rank{grid-area:2/2;justify-self:end;width:auto;font-size:18px;line-height:1.2;padding:3px 9px;border-radius:2px;letter-spacing:.02em}
+  .name{font-size:20px;gap:7px}
+  .sector{font-size:11px;padding:2px 6px}
+  .does{font-size:15.5px}
   .sec{margin-top:40px;padding-top:20px}
-  .hint{font-size:10px;letter-spacing:.06em}
+  .hint{font-size:11.5px;letter-spacing:.05em}
   .d-head{padding:18px 18px 15px}
-  .d-head h2{font-size:23px}
-  .d-money b{font-size:21px}
+  .d-head h2{font-size:25px}
+  .d-money b{font-size:23px}
+  .d-money span{font-size:12.5px}
   .d-body{padding:18px 18px 22px}
-  .d-body p{font-size:15.5px;margin-bottom:18px}
+  .d-body p{font-size:17px;margin-bottom:18px}
+  .d-body h3{font-size:12px}
+  .facts dt{font-size:11px}
+  .facts dd{font-size:15.5px}
   .facts{grid-template-columns:1fr}
-  footer{font-size:10.5px}
+  .sec p{font-size:17px}
+  footer{font-size:12px;line-height:1.75}
 }
 </style>
 
