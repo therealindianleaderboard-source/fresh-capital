@@ -192,7 +192,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-fa
 
 <script>
 /*BUILT_START*/
-const BUILT = "2026-10-06";
+const BUILT = "2026-10-07";
 /*BUILT_END*/
 /*DATA_START*/
 const DATA = [
@@ -227,6 +227,23 @@ const DATA = [
 "investors": "Coatue, Blackstone, MGX",
 "valuation": "$190B",
 "date": "Aug 13, 2026"
+},
+{
+"name": "Lambda",
+"sector": "AI Infrastructure",
+"amt": 4000.0,
+"stage": "Private round",
+"iso": "2026-10-06",
+"does": "cloud provider for AI computing",
+"what": "Lambda is an AI computing startup and cloud provider offering GPU capacity for artificial intelligence infrastructure.",
+"why": "The round is driven by massive growth in its backlog from $15 billion in June to $50 billion in September, heavily bolstered by a $35 billion commitment from Anthropic.",
+"src": "https://techcrunch.com/2026/10/06/ai-computing-startup-lambda-to-raise-4b-ahead-of-planned-ipo/",
+"founders": "Not disclosed",
+"hq": "Not disclosed",
+"investors": "Coatue Management, Blackstone",
+"valuation": "14500",
+"date": "Oct 6, 2026",
+"yc": "Not disclosed"
 },
 {
 "name": "Crusoe",
@@ -422,40 +439,40 @@ const DATA = [
 "valuation": "Undisclosed",
 "date": "Sep 25, 2026",
 "yc": ""
-},
-{
-"name": "EliseAI",
-"sector": "AI Applications",
-"amt": 350.0,
-"stage": "Private round",
-"iso": "2026-10-02",
-"does": "deploying AI for the home rental sector",
-"what": "EliseAI deploys specialized conversational and operational AI solutions for the home rental industry.",
-"why": "The round rests on strong deployment metrics and expansion into the healthcare sector.",
-"src": "https://news.crunchbase.com/venture/biggest-funding-rounds-ai-cyber-real-estate-instinct/",
-"founders": "Not disclosed",
-"hq": "New York, United States",
-"investors": "Andreessen Horowitz, Bessemer Venture Partners",
-"valuation": "$4 billion",
-"date": "Oct 2, 2026",
-"yc": "Not disclosed"
 }
 ];
 /*DATA_END*/
 /*SEEDS_START*/
 const SEEDS = [
 {
+"name": "Cori Clinical",
+"sector": "AI Applications",
+"amt": 4.0,
+"stage": "Seed",
+"iso": "2026-10-07",
+"does": "AI platform for clinical trial design",
+"what": "Cori Clinical has developed an AI workspace that brings together internal knowledge and external intelligence to design and set up clinical trials.",
+"why": "The round is supported by customer traction including working with two of the world's five largest enterprise clinical research organizations (CROs) and Erasmus MC, alongside internal modelling showing potential to reduce trial set-up costs by at least 33 per cent.",
+"src": "https://tech.eu/2026/10/07/cori-clinical-secures-4m-seed-to-improve-clinical-trial-design-and-cut-delays/",
+"founders": "Jorn Jansen Schoonhoven (CEO) and Patricio Fernández (CTO).",
+"hq": "Not disclosed",
+"investors": "Breega, Enzo, Heartfelt, Together Ventures, Bynd",
+"valuation": "Undisclosed",
+"date": "Oct 7, 2026",
+"yc": "Not disclosed"
+},
+{
 "name": "SimpL",
 "sector": "AI Applications",
-"amt": 1.32,
+"amt": 1.2,
 "stage": "Pre-seed",
 "iso": "2026-10-06",
-"does": "AI-powered B2B sales operating system",
-"what": "SimpL builds an AI system that analyses public data and internal CRM signals to identify sales prospects, timing, and engagement strategies.",
-"why": "The round rests on team and thesis, as no specific customer or revenue metrics are mentioned in the article.",
+"does": "AI operating system for B2B sales",
+"what": "SimpL uses public data, a proprietary knowledge graph and deep learning to help B2B sales teams identify and generate sales opportunities.",
+"why": "The round rests on team and thesis, developing a proprietary knowledge graph and predictive deep learning model operating on a unique results-based model.",
 "src": "https://tech.eu/2026/10/06/italian-simpl-raises-eur12m-to-power-b2b-sales-with-ai/",
-"founders": "Nicolò Fugallo (CEO), Raffaele Scarano (CTO), Luca Marco Agnoli",
-"hq": "Milan, Italy",
+"founders": "Nicolò Fugallo (CEO), Raffaele Scarano (CTO) and Luca Marco Agnoli.",
+"hq": "Italy, Italy",
 "investors": "Techshop Capital, Vento Ventures",
 "valuation": "Undisclosed",
 "date": "Oct 6, 2026",
@@ -467,12 +484,12 @@ const SEEDS = [
 "amt": 6.0,
 "stage": "Seed",
 "iso": "2026-10-06",
-"does": "AI market intelligence for dealmakers",
-"what": "Comparables.ai provides an AI platform that combines private company financials and M&A data to help investment banks and PE firms find targets.",
-"why": "The round is driven by traction that includes over 50,000 professionals using the platform across 30 countries and enterprise adoption by a Big Four advisory firm.",
+"does": "AI market intelligence platform for dealmakers",
+"what": "Comparables.ai provides an AI-native discovery engine and global dataset to help corporate development teams, private equity firms, and M&A advisors discover acquisition targets and buyers.",
+"why": "The platform is already used by more than 50,000 professionals across over 30 countries, including enterprise customers like a Big Four advisory firm extending deployment to more than 10 countries.",
 "src": "https://tech.eu/2026/10/06/comparablesai-secures-6m-seed-to-scale-its-ai-platform-for-dealmakers/",
-"founders": "Niko Nalli, Markus Vesala, Martin Kangasniemi, Muhammad Ammad-ud-din",
-"hq": "Not disclosed, Not disclosed",
+"founders": "Niko Nalli, Markus Vesala, Martin Kangasniemi, and Muhammad Ammad-ud-din.",
+"hq": "Not disclosed",
 "investors": "Pragmatech, Araya Ventures",
 "valuation": "Undisclosed",
 "date": "Oct 6, 2026",
@@ -484,12 +501,12 @@ const SEEDS = [
 "amt": 40.0,
 "stage": "Private round",
 "iso": "2026-10-06",
-"does": "agentic AI offensive security platform",
-"what": "Hadrian develops an automated offensive security platform that uses AI agents to continuously map external attack surfaces and perform penetration testing.",
-"why": "The round is supported by its enterprise customer base including McKesson, NBC Universal, and Total Energies, alongside claims of a 5x ROI compared to manual testing.",
+"does": "agentic AI platform for offensive security",
+"what": "Hadrian develops a platform that uses AI to help businesses identify and prioritize exploitable security risks across their external attack surfaces.",
+"why": "Driven by strong customer adoption across the US and Europe with clients like McKesson, NBC Universal, and Total Energies, alongside claims of ten times greater visibility and an 80 percent reduction in time to resolution.",
 "src": "https://tech.eu/2026/10/06/hadrian-raises-40m-to-tackle-ai-driven-cyber-threats/",
-"founders": "Rogier Fischer (CEO), Olivier Beg, Maurice Clin",
-"hq": "Not disclosed, Not disclosed",
+"founders": "Rogier Fischer (CEO), Olivier Beg, and Maurice Clin.",
+"hq": "Not disclosed",
 "investors": "Forgepoint Capital International, Smart Fin",
 "valuation": "Undisclosed",
 "date": "Oct 6, 2026",
@@ -502,11 +519,11 @@ const SEEDS = [
 "stage": "Seed",
 "iso": "2026-10-06",
 "does": "AI workspace for commercial insurers",
-"what": "Nettle offers an AI platform that helps commercial insurers remotely assess physical risks, capture evidence, and automate loss control inspections.",
-"why": "The round follows an oversubscribed seed financing and builds on existing operations across Europe, the US, and Asia, addressing severe industry backlogs.",
+"what": "Nettle is developing an AI workspace designed to help commercial insurers assess physical risks, automate inspections, and collect data across portfolios.",
+"why": "The round follows prior traction expanding from Commercial Property to Liability, Construction, and Workers' Compensation, enabling insurers to complete risk inspections five times faster.",
 "src": "https://tech.eu/2026/10/06/nettle-raises-48m-to-expand-its-ai-workspace-for-insurers/",
-"founders": "Jack Miller (CEO), Katya Kinane",
-"hq": "Not disclosed, Not disclosed",
+"founders": "Jack Miller (CEO) and Katya Kinane, former QuantumBlack colleagues.",
+"hq": "Not disclosed",
 "investors": "MTech, Project A Ventures",
 "valuation": "Undisclosed",
 "date": "Oct 6, 2026",
@@ -564,6 +581,23 @@ const SEEDS = [
 "yc": "Not disclosed"
 },
 {
+"name": "Melius",
+"sector": "AI Applications",
+"amt": 25.0,
+"stage": "Series A",
+"iso": "2026-10-06",
+"does": "agents lab for creative work",
+"what": "Melius is an AI platform for generating ad campaigns, images, and videos.",
+"why": "The startup claims to have hit more than $1 million in annualized revenue within two months of coming out of stealth in July.",
+"src": "https://techcrunch.com/2026/10/06/ex-ramp-engineers-raise-20m-for-platform-melius-after-scrapping-their-first-product/",
+"founders": "Joowon Kim, Young Kim, and Arnav Ramu, former engineers at Ramp.",
+"hq": "New York, United States",
+"investors": "CRV, General Catalyst",
+"valuation": "Undisclosed",
+"date": "Oct 6, 2026",
+"yc": "Not disclosed"
+},
+{
 "name": "Fleuret AI",
 "sector": "Data/Security",
 "amt": 4.4,
@@ -612,40 +646,6 @@ const SEEDS = [
 "investors": "Scale Venture Partners",
 "valuation": "Undisclosed",
 "date": "Oct 5, 2026",
-"yc": "Not disclosed"
-},
-{
-"name": "Buntar Aerospace",
-"sector": "Robotics",
-"amt": 16.0,
-"stage": "Private round",
-"iso": "2026-10-05",
-"does": "AI-driven defense autonomy and drone platform",
-"what": "Buntar Aerospace manufactures reconnaissance drones and develops knowledge-based AI copilot software for autonomous military and civilian operations.",
-"why": "The round is driven by established commercial deployment across front-line units in Ukraine and rising demand for autonomous defense capabilities.",
-"src": "https://tech.eu/2026/10/05/buntar-aerospace-raises-16m-to-scale-ukrainian-defence-autonomy/",
-"founders": "Bohdan Sas",
-"hq": "Not disclosed, Ukraine",
-"investors": "Freedom Fund",
-"valuation": "Undisclosed",
-"date": "Oct 5, 2026",
-"yc": "Not disclosed"
-},
-{
-"name": "Osavul",
-"sector": "AI Applications",
-"amt": 9.27,
-"stage": "Series A",
-"iso": "2026-10-01",
-"does": "AI platform for hostile threat and disinformation detection",
-"what": "Osavul builds an AI platform that scans open-source data to identify disinformation campaigns and hostile cyber or physical threats.",
-"why": "The round is driven by live operational success with NATO and defense agencies, and expansion into enterprise protection.",
-"src": "https://tech.eu/2026/10/01/hostile-threat-warning-startup-osavul-raises-8-5m/",
-"founders": "Dmytro Plieshakov (CEO) and Dmytro Bilash (Chief Business Development Officer), launched in response to Russia’s invasion of Ukraine.",
-"hq": "Luxembourg, Luxembourg",
-"investors": "33N Ventures",
-"valuation": "Undisclosed",
-"date": "Oct 1, 2026",
 "yc": "Not disclosed"
 }
 ];
